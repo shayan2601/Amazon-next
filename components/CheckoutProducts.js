@@ -57,5 +57,3 @@ function CheckoutProducts({ title, description, image, id, price, rating }) {
     </div>
   );
 }
-
-export default CheckoutProducts;
