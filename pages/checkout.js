@@ -6,7 +6,7 @@ import { getBasketTotal, selectItems } from "./slices/basketSlice";
 import { useSession } from "next-auth/client";
 import CurrencyFormat from "react-currency-format";
 
-function checkout() {
+export default function checkout() {
   const basket = useSelector(selectItems);
   const [session] = useSession();
 
@@ -80,5 +80,3 @@ function checkout() {
     </div>
   );
 }
-
-export default checkout;
