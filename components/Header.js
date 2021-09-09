@@ -57,7 +57,10 @@ function Header() {
               <ChevronDownIcon className="cursor-pointer h-10 p-2 -ml-2" />
             </div>
           </div>
-          <div>
+          <div
+            className="cursor-pointer"
+            onClick={() => session && router.push("/orders")}
+          >
             <p className="text-lg">Return</p>
             <p>& Order</p>
           </div>

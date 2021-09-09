@@ -5,10 +5,32 @@ import { useSelector } from "react-redux";
 import { getBasketTotal, selectItems } from "./slices/basketSlice";
 import { useSession } from "next-auth/client";
 import CurrencyFormat from "react-currency-format";
+import axios from "axios";
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(process.env.stripe_public_key);
 
 function Checkout() {
-  const basket = useSelector(selectItems);
+  const items = useSelector(selectItems);
   const [session] = useSession();
+
+  const createCheckoutSession = async () => {
+    const stripe = await stripePromise;
+
+    //Call thr backend to create the checkout session
+    const checkoutSession = await axios.post("/api/create-checkout-session", {
+      items: items,
+      email: session.user.email,
+    });
+
+    //redirect the user to stripe checkout
+    const result = await stripe.redirectToCheckout({
+      sessionId: checkoutSession.data.id,
+    });
+
+    if (result.error) {
+      alert(result.error.message);
+    }
+  };
 
   return (
     <div className="bg-gray-100">
@@ -23,22 +45,22 @@ function Checkout() {
             width={1050}
           />
           <h1 className="font-bold text-2xl mt-4 italic">
-            {basket.length === 0
+            {items.length === 0
               ? "Your Shopping basket is empty"
               : "Shopping basket"}
           </h1>
           <hr />
           <div>
-            {basket.map((items) => (
+            {items.map((item) => (
               <CheckoutProducts
-                title={items.title}
-                description={items.description}
-                key={items.id}
-                id={items.id}
-                price={items.price}
-                category={items.category}
-                image={items.image}
-                rating={items.rating}
+                title={item.title}
+                description={item.description}
+                key={item.id}
+                id={item.id}
+                price={item.price}
+                category={item.category}
+                image={item.image}
+                rating={item.rating}
               />
             ))}
           </div>
@@ -50,7 +72,7 @@ function Checkout() {
                 <h1 className=" font-semibold italic">
                   Subtotal
                   <span className=" font-normal">
-                    ({basket.length} items): <strong>{value}</strong>
+                    ({items.length} items): <strong>{value}</strong>
                   </span>
                 </h1>
                 <small className="subtotal_gift">
@@ -60,20 +82,22 @@ function Checkout() {
               </>
             )}
             decimalScale={2}
-            value={getBasketTotal(basket)}
+            value={getBasketTotal(items)}
             displayType={"text"}
             thousandSeparator={true}
             prefix={"$"}
           />
 
           <button
+            role="link"
+            onClick={createCheckoutSession}
             className={
               !session
                 ? "bg-gray-400 p-2 shadow-md rounded-md font-semibold hover:shadow-lg"
                 : "button p-2 shadow-md rounded-md font-semibold hover:shadow-lg"
             }
           >
-            {!session ? `Sign In to CheckOut` : "CheckOut"}
+            {!session ? `Sign In to CheckOut` : "Proceed to CheckOut"}
           </button>
         </div>
       </main>
