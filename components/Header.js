@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/solid";
 import { signIn, signOut, useSession } from "next-auth/client";
 import { useSelector } from "react-redux";
-import { selectItems } from "../pages/slices/basketSlice";
+import { selectItems } from "../slices/basketSlice";
 import { useRouter } from "next/router";
 
 function Header() {

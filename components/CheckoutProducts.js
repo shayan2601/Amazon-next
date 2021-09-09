@@ -1,6 +1,6 @@
 import { StarIcon } from "@heroicons/react/solid";
 import { useDispatch } from "react-redux";
-import { removeFromBasket, addToBasket } from "../pages/slices/basketSlice";
+import { removeFromBasket, addToBasket } from "../slices/basketSlice";
 
 function CheckoutProducts({ title, description, image, id, price, rating }) {
   const dispatch = useDispatch();

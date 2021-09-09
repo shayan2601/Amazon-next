@@ -2,7 +2,7 @@ import Header from "../components/Header";
 import Image from "next/image";
 import CheckoutProducts from "../components/CheckoutProducts";
 import { useSelector } from "react-redux";
-import { getBasketTotal, selectItems } from "./slices/basketSlice";
+import { getBasketTotal, selectItems } from "../slices/basketSlice";
 import { useSession } from "next-auth/client";
 import CurrencyFormat from "react-currency-format";
 import axios from "axios";
