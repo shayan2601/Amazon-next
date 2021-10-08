@@ -3,15 +3,14 @@ import Image from "next/image";
 import CheckoutProducts from "../components/CheckoutProducts";
 import { useSelector } from "react-redux";
 import { getBasketTotal, selectItems } from "../slices/basketSlice";
-import { useSession } from "next-auth/client";
 import CurrencyFormat from "react-currency-format";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
+import Footer from "../components/Footer";
 const stripePromise = loadStripe(process.env.stripe_public_key);
 
 function Checkout() {
   const items = useSelector(selectItems);
-  const [session] = useSession();
 
   const createCheckoutSession = async () => {
     const stripe = await stripePromise;
@@ -33,16 +32,15 @@ function Checkout() {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div style={{ height: "100vh" }} className="bg-gray-100 flex flex-col">
       <header className="min-w-max">
         <Header />
       </header>
       <main className="lg:flex max-w-screen-xl mx-auto ">
         <div>
-          <Image
-            src="https://links.papareact.com/ikj"
-            height={250}
-            width={1050}
+          <img
+            className="h-52"
+            src="https://www.ionos.ca/digitalguide/fileadmin/DigitalGuide/Teaser/online-shopping-t.jpg"
           />
           <h1 className="font-bold text-2xl mt-4 italic">
             {items.length === 0
@@ -75,10 +73,6 @@ function Checkout() {
                     ({items.length} items): <strong>{value}</strong>
                   </span>
                 </h1>
-                <small className="subtotal_gift">
-                  <input type="checkbox" />
-                  This order contains a gift
-                </small>
               </>
             )}
             decimalScale={2}
@@ -92,15 +86,16 @@ function Checkout() {
             role="link"
             onClick={createCheckoutSession}
             className={
-              !session
-                ? "bg-gray-400 p-2 shadow-md rounded-md font-semibold hover:shadow-lg"
-                : "button p-2 shadow-md rounded-md font-semibold hover:shadow-lg"
+              "button p-2 shadow-md rounded-md font-semibold hover:shadow-lg"
             }
           >
-            {!session ? `Sign In to CheckOut` : "Proceed to CheckOut"}
+            Proceed to CheckOut
           </button>
         </div>
       </main>
+      <footer className="mt-auto">
+        <Footer />
+      </footer>
     </div>
   );
 }

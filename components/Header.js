@@ -1,100 +1,167 @@
-import Image from "next/image";
 import {
-  ChevronDownIcon,
   MenuIcon,
-  SearchIcon,
+  ShoppingBagIcon,
   ShoppingCartIcon,
 } from "@heroicons/react/solid";
-import { signIn, signOut, useSession } from "next-auth/client";
 import { useSelector } from "react-redux";
 import { selectItems } from "../slices/basketSlice";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import MenuOption from "./MenuOption";
+import {
+  DocumentDuplicateIcon,
+  HomeIcon,
+  PhoneIcon,
+} from "@heroicons/react/solid";
 
 function Header() {
-  const [session] = useSession();
-
   const router = useRouter();
+  const [selected, setSelected] = useState("");
+  const [show, handleShow] = useState(false);
+  const [open, setOpen] = useState(false);
+  const opened = Boolean(open);
 
   const basket = useSelector(selectItems);
 
-  const checkoutPage = () => {
-    router.push("/checkout");
+  // useEffect(() => {
+  //   window.addEventListener("scroll", () => {
+  //     if (window.scrollY > 100) {
+  //       handleShow(true);
+  //     } else {
+  //       handleShow(false);
+  //     }
+  //   });
+  //   return () => window.removeEventListener("scroll");
+  // }, []);
+
+  const menuOpen = () => {
+    setOpen(true);
+    if (open) {
+      setOpen(false);
+    }
   };
 
   return (
     <header className="flex flex-col">
-      <div className="flex items-center justify-between px-2 py-1 text-white bg-amazon_blue">
-        <div className="mt-3">
-          <Image
-            onClick={() => router.push("/")}
-            objectFit="contain"
-            width={150}
-            height={40}
-            src="https://links.papareact.com/f90"
-            className="cursor-pointer"
+      <div
+        className={`flex items-center justify-between px-2 py-1 text-white bg-amazon_blue ${
+          show && "bg-amazon_blue-transparent"
+        }  `}
+      >
+        <div
+          aria-expanded={opened ? "true" : undefined}
+          onClick={menuOpen}
+          className="md:hidden cursor-pointer relative"
+        >
+          <MenuIcon className="h-12 p-2 text-yellow-100" />
+        </div>
+        <div
+          onClick={() => {
+            router.push("/");
+          }}
+        >
+          <h2 className=" text-xl font-bold font-sans cursor-pointer">
+            PHONES<span className="text-green-400">HUT</span>
+          </h2>
+        </div>
+
+        <div className=" items-center space-x-3 hidden md:inline-flex">
+          <MenuOption
+            onClick={() => {
+              router.push("/");
+              setSelected("Home");
+            }}
+            selected
+            active={selected === "Home"}
+            title="Home"
+          />
+          <MenuOption
+            onClick={() => {
+              router.push("/about");
+              setSelected("About");
+            }}
+            active={selected === "About"}
+            title="About"
+          />
+          <MenuOption
+            onClick={() => {
+              router.push("/contact");
+              setSelected("Contact");
+            }}
+            active={selected === "Contact"}
+            title="Contact US"
+          />
+          <MenuOption
+            onClick={() => {
+              router.push("/checkout");
+              setSelected("Cart");
+            }}
+            active={selected === "Cart"}
+            title="Cart"
           />
         </div>
-        <div className="flex items-cente flex-grow px-5">
-          <div className="flex items-center bg-gray-100 text-black rounded-l-md">
-            <p className="text-xl px-2">All</p>
-            <ChevronDownIcon className="cursor-pointer h-10 py-2" />
-          </div>
-          <div className="flex items-center bg-white px-1 rounded-r-md flex-grow">
-            <input
-              className="p-2 outline-none text-black flex-grow flex-shrink"
-              placeholder="Search"
-            />
-            <SearchIcon className="h-10 -mr-2 p-2  bg-yellow-500 cursor-pointer rounded-r-md text-black" />
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="cursor-pointer link">
-            <p onClick={!session ? signIn : signOut} className="text-lg">
-              {session ? `Hello! ${session.user.name}` : "Sign IN"}
-            </p>
-            <div className="flex items-center -mt-2">
-              <p className="text-sm">Accounts & Lists</p>
-              <ChevronDownIcon className="cursor-pointer h-10 p-2 -ml-2" />
+        <span
+          onClick={() => router.push("/checkout")}
+          className="relative cursor-pointer"
+        >
+          <ShoppingCartIcon className="h-12 p-2 hover:text-gray-300" />
+          <sup className="absolute top-1 py-2 left-8 bg-red-600 text-white p-1 rounded-full">
+            {basket.length}
+          </sup>
+        </span>
+      </div>
+
+      {/* menuOpen */}
+      {open ? (
+        <div className="bg-amazon_blue animation">
+          <div className=" flex flex-col items-left space-y-3 text-white px-8 py-5 ">
+            <div className="flex items-center hover:bg-gray-700 rounded-md ">
+              <HomeIcon className="h-10 p-2 text-gray-400" />
+
+              <p
+                className=" cursor-pointer font-semibold uppercase hover:text-red-600 text-lg font-mono"
+                onClick={() => router.push("/")}
+              >
+                Home
+              </p>
+            </div>
+
+            <hr />
+
+            <div className="items-center flex hover:bg-gray-700 rounded-md ">
+              <DocumentDuplicateIcon className=" h-10 p-2 text-gray-400" />
+              <p
+                className="cursor-pointer font-semibold uppercase hover:text-red-600 text-lg font-mono"
+                onClick={() => router.push("/about")}
+              >
+                About Us
+              </p>
+            </div>
+
+            <hr />
+
+            <div className="flex items-center hover:bg-gray-700 rounded-md ">
+              <PhoneIcon className=" h-10 p-2 text-gray-400" />
+              <p
+                className="cursor-pointer font-semibold uppercase hover:text-red-600 text-lg font-mono "
+                onClick={() => router.push("/contact")}
+              >
+                Contact Us
+              </p>
+            </div>
+            <hr />
+            <div className="flex items-center hover:bg-gray-700 rounded-md ">
+              <ShoppingBagIcon className=" h-10 p-2 text-gray-400" />
+              <p
+                className="cursor-pointer font-semibold uppercase hover:text-red-600 text-lg font-mono "
+                onClick={() => router.push("/checkout")}
+              >
+                Cart
+              </p>
             </div>
           </div>
-          <div
-            className="cursor-pointer"
-            onClick={() => session && router.push("/orders")}
-          >
-            <p className="text-lg">Return</p>
-            <p>& Order</p>
-          </div>
-          <div
-            onClick={checkoutPage}
-            className="flex items-center cursor-pointer"
-          >
-            <span className="relative">
-              <ShoppingCartIcon className="h-10 p-2" />
-              <sup className="absolute top-3 left-8">{basket.length}</sup>
-            </span>
-            <p>Cart</p>
-          </div>
         </div>
-      </div>
-      {/* header Bottom */}
-      <div className="flex items-center bg-amazon_blue-light px-3 text-white justify-between cursor-pointer ">
-        <div className="md:flex items-center  font-semibold space-x-2 hidden">
-          <div className="flex items-center font-semibold">
-            <MenuIcon className="h-10 p-2" />
-            <p>All</p>
-          </div>
-          <div className="flex space-x-2">
-            <p>Today's Deal</p>
-            <p>Costumer Service</p>
-            <p>Gift Cards</p>
-            <p>Registry</p>
-            <p>Sell</p>
-          </div>
-        </div>
-        <div>
-          <p>Amazon's response to COVID-19</p>
-        </div>
-      </div>
+      ) : null}
     </header>
   );
 }

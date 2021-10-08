@@ -23,7 +23,7 @@ function CheckoutProducts({ title, description, image, id, price, rating }) {
   };
 
   return (
-    <div className="flex items-center rounded-md shadow-md my-4 p-4 bg-white relative hover:shadow-lg transition-all">
+    <div className="md:flex md:flex-row md:items-center rounded-md shadow-md md:my-4 md:p-4 bg-white relative hover:shadow-xl transition-all mx-4 p-8 xs:flex-col mt-5">
       <div className="flex items-center">
         <img className="w-28 object-contain" src={image} />
         <div className="p-5 mr-28">

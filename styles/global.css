@@ -9,4 +9,35 @@
   .button {
     @apply bg-gradient-to-b from-yellow-400 to-yellow-300 rounded-sm hover:shadow-xl font-semibold py-1 focus:ring-2 border-yellow-300 focus:ring-yellow-500 active:from-yellow-500 focus:outline-none;
   }
+  .bounce:hover {
+    animation: upDown 1s infinite;
+  }
+  @keyframes upDown {
+    0%,
+    100% {
+      transform: scale(1.1);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: scale(1);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+  @import url("https://fonts.googleapis.com/css2?family=Lobster&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Gluten:wght@300&family=Indie+Flower&family=Pacifico&family=Patrick+Hand&display=swap");
+
+  .animation {
+    animation: growDown 700ms ease-in-out forwards;
+  }
+  @keyframes growDown {
+    0% {
+      transform: scaleY(0);
+    }
+    80% {
+      transform: scaleY(1.1);
+    }
+    100% {
+      transform: scaleY(1);
+    }
+  }
 }
